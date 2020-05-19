@@ -4,8 +4,6 @@ import api from "../api";
 
 import styled from "styled-components";
 
-import "react-table/react-table.css";
-
 const Wrapper = styled.div`
   padding: 0 40px 40px 40px;
 `;
@@ -32,10 +30,50 @@ class MoviesList extends Component {
   };
 
   render() {
+    const { movies, isLoading } = this.state;
+    console.log("TCL: MoviesList -> render -> movies", movies);
+
+    const columns = [
+      {
+        Header: "ID",
+        accessor: "_id",
+        filterable: true,
+      },
+      {
+        Header: "Name",
+        accessor: "name",
+        filterable: true,
+      },
+      {
+        Header: "Rating",
+        accessor: "rating",
+        filterable: true,
+      },
+      {
+        Header: "Time",
+        accessor: "time",
+        Cell: (props) => <span>{props.value.join(" / ")}</span>,
+      },
+    ];
+
+    let showTable = true;
+    if (!movies.length) {
+      showTable = false;
+    }
+
     return (
-      <div>
-        <p>In this page you'll see the list of movies</p>
-      </div>
+      <Wrapper>
+        {showTable && (
+          <ReactTable
+            data={movies}
+            columns={columns}
+            loading={isLoading}
+            defaultPageSize={10}
+            showPageSizeOptions={true}
+            minRows={0}
+          />
+        )}
+      </Wrapper>
     );
   }
 }
